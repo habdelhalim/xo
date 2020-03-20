@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>XO</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+     <h2>Hey there</h2>
+     <div id="app">
+         <span v-bind:title="message">check me here</span>
+             <input type="text" v-model="input"></input>
+         <button v-on:click="clicked">add</button>
+         <ul>
+             <li v-for="item in items">
+                     {{item.name}}
+             </li>
+         </ul>
+     </div>
+
+     <script src="./app.js"></script>
+</body>
+</html>
