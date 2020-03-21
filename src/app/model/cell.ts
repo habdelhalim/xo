@@ -1,14 +1,20 @@
+export enum CellType {
+    CIRCLE, CROSS
+}
+
 export class Cell {
     color: string;
+    type: CellType;
+    private clicked: boolean = false;
 
-    constructor(private x: number, private y: number, private size: number) {
-        this.color = 'rgba(' + this.x + ', ' + this.y + ', 20, 1)';
+    constructor(public x: number, public y: number, private size: number) {
+        this.color = '#fff';
     }
 
     render(ctx: CanvasRenderingContext2D) {
         ctx.save()
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.size - 1, this.size - 1);
+        ctx.fillRect(this.x, this.y, this.size, this.size);
         ctx.restore()
     }
 
@@ -21,8 +27,18 @@ export class Cell {
         return false;
     }
 
-    change(ctx: CanvasRenderingContext2D): void {
-        this.color = '#fff'
+    change(ctx: CanvasRenderingContext2D, isCross: boolean): boolean {
+        if (this.clicked)
+            return isCross;
+
+        this.clicked = true;
+        this.type = isCross ? CellType.CROSS : CellType.CIRCLE;
+        if (isCross)
+            this.color = '#000'
+        else
+            this.color = '#eee'
+
         this.render(ctx)
+        return !isCross;
     }
 }
