@@ -3,18 +3,40 @@ export enum CellType {
 }
 
 export class Cell {
-    color: string;
     type: CellType;
     private clicked: boolean = false;
 
     constructor(public x: number, public y: number, private size: number) {
-        this.color = '#fff';
     }
 
     render(ctx: CanvasRenderingContext2D) {
         ctx.save()
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.size, this.size);
+        switch (this.type) {
+            case CellType.CROSS:
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x + this.size, this.y + this.size);
+                ctx.moveTo(this.x, this.y + this.size);
+                ctx.lineTo(this.x + this.size, this.y);
+                ctx.closePath();
+                ctx.stroke()
+                break;
+
+            case CellType.CIRCLE:
+                ctx.fillStyle = '#eee';
+                ctx.beginPath();
+                ctx.arc(this.x + this.size / 2, this.y + this.size / 2, this.size / 2, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.stroke();
+                break;
+
+            default:
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(this.x, this.y, this.size, this.size);
+                break;
+        }
+
         ctx.restore()
     }
 
@@ -33,12 +55,8 @@ export class Cell {
 
         this.clicked = true;
         this.type = isCross ? CellType.CROSS : CellType.CIRCLE;
-        if (isCross)
-            this.color = '#000'
-        else
-            this.color = '#eee'
-
         this.render(ctx)
+
         return !isCross;
     }
 }

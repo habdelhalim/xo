@@ -11,11 +11,13 @@ export class BoardComponent implements OnInit, AfterViewInit {
   height = 400;
   size = 3;
   cross: boolean = true;
+  finished: boolean = false;
 
   @ViewChild('canvas', { static: true })
   canvas: ElementRef<HTMLCanvasElement>
   ctx: CanvasRenderingContext2D;
   cells: Cell[];
+  cellSize: number;
 
   constructor() { }
 
@@ -26,10 +28,10 @@ export class BoardComponent implements OnInit, AfterViewInit {
 
   createCells() {
     this.cells = [];
-    const cellSize = this.width / this.size;
+    this.cellSize = this.width / this.size;
     for (let i = 0; i < this.size; i++) {
       for (let j = 0; j < this.size; j++) {
-        this.cells.push(new Cell(i * cellSize, j * cellSize, cellSize));
+        this.cells.push(new Cell(i * this.cellSize, j * this.cellSize, this.cellSize));
       }
     }
   }
@@ -46,6 +48,9 @@ export class BoardComponent implements OnInit, AfterViewInit {
   }
 
   clicked($event) {
+    if (this.finished)
+      return;
+
     const clickedCell: Cell[] = this.cells
       .filter(cell => cell.isClicked({ x: $event.clientX, y: $event.clientY }));
 
@@ -53,10 +58,13 @@ export class BoardComponent implements OnInit, AfterViewInit {
       this.cross = cell.change(this.ctx, this.cross);
     });
 
-    this.checkWinner();
+    if (this.hasWinner()) {
+      this.finished = true;
+      console.log('we have a winner')
+    };
   }
 
-  checkWinner() {
+  hasWinner(): boolean {
     const crosses = []
     const circles = []
 
@@ -71,14 +79,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
       }
     });
 
-    if (this.checkLine(circles)) {
-      console.log('circles wins!!!!')
-    }
-
-    if (this.checkLine(crosses)) {
-      console.log('crosses wins!!!!')
-    }
-    console.log('crosses: ', crosses.length, ' circles: ', circles.length);
+    return this.checkLine(circles) || this.checkLine(crosses);
   }
 
   private checkLine(items: any[]): boolean {
@@ -103,6 +104,16 @@ export class BoardComponent implements OnInit, AfterViewInit {
 
       if (rows[element.y] >= 3)
         return true;
+
+      if (cols[element.x] >= 1 && cols[element.x - this.cellSize] >= 1 && cols[element.x - 2 * this.cellSize] >= 1
+        && rows[element.y] >= 1 && rows[element.y - this.cellSize] >= 1 && rows[element.y - 2 * this.cellSize] >= 1) {
+        return true;
+      }
+
+      if (cols[element.x] >= 1 && cols[element.x - this.cellSize] >= 1 && cols[element.x - 2 * this.cellSize] >= 1
+        && rows[element.y] >= 1 && rows[element.y + this.cellSize] >= 1 && rows[element.y + 2 * this.cellSize] >= 1) {
+        return true;
+      }
     }
 
     return false;
