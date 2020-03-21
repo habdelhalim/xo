@@ -7,8 +7,8 @@ import { Cell, CellType } from 'src/app/model/cell';
   styleUrls: ['./board.component.css']
 })
 export class BoardComponent implements OnInit, AfterViewInit {
-  width = 400;
-  height = 400;
+  width = 500;
+  height = 500;
   size = 3;
   cross: boolean = true;
   finished: boolean = false;
@@ -58,13 +58,10 @@ export class BoardComponent implements OnInit, AfterViewInit {
       this.cross = cell.change(this.ctx, this.cross);
     });
 
-    if (this.hasWinner()) {
-      this.finished = true;
-      console.log('we have a winner')
-    };
+    this.checkWinner();
   }
 
-  hasWinner(): boolean {
+  checkWinner(): void {
     const crosses = []
     const circles = []
 
@@ -79,7 +76,23 @@ export class BoardComponent implements OnInit, AfterViewInit {
       }
     });
 
-    return this.checkLine(circles) || this.checkLine(crosses);
+    let winner;
+    if (this.checkLine(circles)) {
+      winner = 'Circle';
+    }
+
+    if (this.checkLine(crosses)) {
+      winner = 'Cross';
+    }
+
+    if (winner) {
+      this.ctx.font = '30pt Arial';
+      this.ctx.textAlign = 'center';
+      this.ctx.fillText(winner + ' is the winner !!!', this.width / 2, this.height / 2);
+      this.finished = true;
+    }
+
+    return;
   }
 
   private checkLine(items: any[]): boolean {

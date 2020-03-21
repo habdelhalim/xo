@@ -10,10 +10,11 @@ export class Cell {
     }
 
     render(ctx: CanvasRenderingContext2D) {
-        ctx.save()
+        ctx.save();
+        
         switch (this.type) {
             case CellType.CROSS:
-                ctx.fillStyle = '#000';
+                ctx.strokeStyle = '#000';
                 ctx.beginPath();
                 ctx.moveTo(this.x, this.y);
                 ctx.lineTo(this.x + this.size, this.y + this.size);
@@ -24,7 +25,7 @@ export class Cell {
                 break;
 
             case CellType.CIRCLE:
-                ctx.fillStyle = '#eee';
+                ctx.strokeStyle = '#f00';
                 ctx.beginPath();
                 ctx.arc(this.x + this.size / 2, this.y + this.size / 2, this.size / 2, 0, Math.PI * 2);
                 ctx.closePath();
@@ -37,7 +38,7 @@ export class Cell {
                 break;
         }
 
-        ctx.restore()
+        ctx.restore();
     }
 
     isClicked(pos: { x: number, y: number }): boolean {
