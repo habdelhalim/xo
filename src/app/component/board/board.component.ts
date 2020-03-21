@@ -7,8 +7,8 @@ import { Cell, CellType } from 'src/app/model/cell';
   styleUrls: ['./board.component.css']
 })
 export class BoardComponent implements OnInit, AfterViewInit {
-  width = 500;
-  height = 500;
+  width = 400;
+  height = 400;
   size = 3;
   cross: boolean = true;
   finished: boolean = false;
@@ -101,31 +101,39 @@ export class BoardComponent implements OnInit, AfterViewInit {
     for (let i = 0; i < items.length; i++) {
       const element = items[i];
       if (cols[element.x]) {
-        cols[element.x]++;
+        cols[element.x].push(element);
       } else {
-        cols[element.x] = 1;
+        cols[element.x] = [element];
       }
 
-      if (cols[element.x] >= 3)
+      if (cols[element.x].length >= 3)
         return true;
 
       if (rows[element.y]) {
-        rows[element.y]++;
+        rows[element.y].push(element);
       } else {
-        rows[element.y] = 1;
+        rows[element.y] = [element];
       }
 
-      if (rows[element.y] >= 3)
+      if (rows[element.y].length >= 3)
         return true;
 
-      if (cols[element.x] >= 1 && cols[element.x - this.cellSize] >= 1 && cols[element.x - 2 * this.cellSize] >= 1
-        && rows[element.y] >= 1 && rows[element.y - this.cellSize] >= 1 && rows[element.y - 2 * this.cellSize] >= 1) {
-        return true;
-      }
+      const cell1 = cols[element.x];
+      const cell2 = cols[element.x - this.cellSize];
+      const cell3 = cols[element.x - 2 * this.cellSize];
+      if (cell1 && cell2 && cell3) {
 
-      if (cols[element.x] >= 1 && cols[element.x - this.cellSize] >= 1 && cols[element.x - 2 * this.cellSize] >= 1
-        && rows[element.y] >= 1 && rows[element.y + this.cellSize] >= 1 && rows[element.y + 2 * this.cellSize] >= 1) {
-        return true;
+        for (let i = 0; i < cell1.length; i++) {
+          for (let j = 0; j < cell2.length; j++) {
+            for (let k = 0; k < cell3.length; k++) {
+              if (cell2[j].y === cell1[i].y + this.cellSize && cell3[k].y === cell2[j].y + this.cellSize
+                || cell2[j].y === cell1[i].y - this.cellSize && cell3[k].y === cell2[j].y - this.cellSize)
+                return true;
+            }
+          }
+        }
+
+        return false;
       }
     }
 
