@@ -11,10 +11,11 @@ export class Cell {
 
     render(ctx: CanvasRenderingContext2D) {
         ctx.save();
-        
+
         switch (this.type) {
             case CellType.CROSS:
                 ctx.strokeStyle = '#000';
+                ctx.lineWidth = 2;
                 ctx.beginPath();
                 ctx.moveTo(this.x, this.y);
                 ctx.lineTo(this.x + this.size, this.y + this.size);
@@ -26,6 +27,7 @@ export class Cell {
 
             case CellType.CIRCLE:
                 ctx.strokeStyle = '#f00';
+                ctx.lineWidth = 2;
                 ctx.beginPath();
                 ctx.arc(this.x + this.size / 2, this.y + this.size / 2, this.size / 2, 0, Math.PI * 2);
                 ctx.closePath();
@@ -34,7 +36,7 @@ export class Cell {
 
             default:
                 ctx.fillStyle = '#fff';
-                ctx.fillRect(this.x, this.y, this.size, this.size);
+                ctx.fillRect(this.x + 1, this.y + 1, this.size - 2, this.size - 2);
                 break;
         }
 
