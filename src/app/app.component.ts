@@ -1,24 +1,13 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { BoardComponent } from './component/board/board.component';
+import { BoardComponent } from './component/board/board.component.js';
 
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
-})
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'xo';
 
-  @ViewChild(BoardComponent, { static: true })
   board: BoardComponent;
   
   constructor() {
-
+      console.log('constructed');
+      this.board = new BoardComponent();
   }
-
-  ngOnInit(): void {
-  }
-
-
 
 }

@@ -1,30 +1,29 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Cell, CellType } from 'src/app/model/cell';
+import { Cell, CellType } from '../../model/cell.js';
 
-@Component({
-  selector: 'app-board',
-  templateUrl: './board.component.html',
-  styleUrls: ['./board.component.css']
-})
-export class BoardComponent implements OnInit, AfterViewInit {
+export class BoardComponent {
+
   width = 400;
   height = 400;
   size = 3;
   cross: boolean = true;
   finished: boolean = false;
 
-  @ViewChild('canvas', { static: true })
-  canvas: ElementRef<HTMLCanvasElement>
+  canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D;
   cells: Cell[];
   cellSize: number;
 
-  constructor() { }
+  constructor() { 
+    this.canvas = <HTMLCanvasElement> document.getElementById('canvas');
+    this.canvas.width = this.width;
+    this.canvas.height = this.height;
+    this.canvas.addEventListener('click', (event) => this.clicked(event));
+    this.ctx = this.canvas.getContext('2d');
 
-  ngOnInit() {
-    this.ctx = this.canvas.nativeElement.getContext('2d');
     this.createCells();
+    this.render()
   }
+
 
   createCells() {
     this.cells = [];
@@ -36,9 +35,6 @@ export class BoardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit(): void {
-    this.render()
-  }
 
   render() {
     this.ctx.fillStyle = '#000';
